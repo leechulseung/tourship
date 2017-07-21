@@ -66,7 +66,7 @@
                           <li><a class="dropdown-item" href="{% url 'news:news_list' %}">newspeed</a></li>
                           <li><a class="dropdown-item" href="{% url 'group:group_index' %}">tourship</a></li>
                           <li><a class="dropdown-item" href="{% url 'set_up' %}">set-up</a></li>
-                          <li><a class="dropdown-item" href="#">logout</a></li>
+                          <li><a class="dropdown-item" href="{% url 'logout' %}">logout</a></li>
                       </ul>
                   </div>
               </div>
@@ -91,16 +91,23 @@
           <div class="modal-body">
             <form method="post">
               {% csrf_token %}
-              <p>{{form.non_field_errors}}<p>
+              {{form.non_field_errors}}
               <div class="form-group mb-0 pb-2">
-                <label class="form-control-label login" for="id_username ">Email</label>
+                <label class="form-control-label login" for="{{ form.username.id_for_label }}">Email</label>
                 {{ form.username }}
-                <p>{{ form.username.error }}</p>
+                {% for error in form.username.errors %}
+                  <p>{{ error }}</p>  
+                {% endfor %}
+                
               </div>
               <div class="form-group mb-0 pb-1">
-                <label class="form-control-label login" for="id_password">PW</label>
+                <label class="form-control-label login" for="{{ form.password.id_for_label }}">PW</label>
                 {{ form.password }}
-                <p>{{ form.password.error }}</p>
+
+                {% for error in form.password.errors %}
+                  <p>{{ error }}</p>  
+                {% endfor %}
+
               </div>
               <div class="form-check ml-3 mr-sm-2 mb-sm-0 pb-4">
                 <label class="form-check-label">

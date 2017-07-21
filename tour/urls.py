@@ -19,13 +19,22 @@ from accounts.views import login
 from django.conf import settings
 from django.conf.urls.static import static
 
+from django.contrib.auth import views as auth_views
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^$', login, name='login'),
+
     url(r'^accounts/', include('accounts.urls')),
     url(r'^accounts/', include('allauth.urls')),
     url(r'^newspeed/', include('news.urls', namespace="news")),
     url(r'^group/', include('group.urls', namespace='group')),
+]
+
+urlpatterns += [
+    url(r'^$', login, name='login'),
+    
+    url(r'^logout/$', auth_views.logout, name='logout',
+        kwargs={'next_page':settings.LOGIN_URL})
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root= settings.MEDIA_ROOT)

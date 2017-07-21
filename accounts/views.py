@@ -1,11 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.conf import settings
 #allauth 
 from django.contrib.auth.views import login as auth_login
 from allauth.socialaccount.models import SocialApp
 from allauth.socialaccount.templatetags.socialaccount import get_providers
-from .forms import LoginForm
+from .forms import LoginForm, SignUpForm
 
 @user_passes_test(lambda user : not user.is_authenticated, login_url='index')
 def login(request):
@@ -33,7 +33,13 @@ def index(request):
 
 @user_passes_test(lambda user : not user.is_authenticated, login_url='index')
 def joinus(request):
-    return render(request, 'accounts/joinus.html')
+    form = SignUpForm(request.POST or None)
+    if form.is_valid():
+        form.save()
+        return redirect('login')
+    return render(request, 'accounts/joinus.html' ,{
+        'form':form
+        })
 
 @login_required
 def set_up(request):

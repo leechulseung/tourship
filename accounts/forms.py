@@ -1,5 +1,20 @@
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django import forms
+from .models import Country, Local,Profile
+
+COUNTRY_CHOICES = ()
+LOCAL_CHOICES = ()
+
+GENDER_CHOICES = (
+    ('남성','남성'),
+    ('여성','여성'),
+    )
+
+for country in Country.objects.all():
+    COUNTRY_CHOICES += (country.id , country.name),
+
+for local in Local.objects.all():
+    LOCAL_CHOICES += (local.id, local.name),
 
 class LoginForm(AuthenticationForm):
     username = forms.CharField(widget=
@@ -12,3 +27,54 @@ class LoginForm(AuthenticationForm):
         forms.PasswordInput(attrs={
             'class' : 'form-control',
             }))
+
+class SignUpForm(UserCreationForm):
+    password1 = forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control'}))
+    password2 = forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control'}))
+
+    address= forms.CharField(widget=forms.TextInput(attrs={'class':'form-control'}))
+    country= forms.ChoiceField(choices=COUNTRY_CHOICES, widget= forms.Select(attrs={
+        'class':'form-control col-3 mb-2 mb-sm-0 ml-3 mr-2',
+        }))
+    local= forms.ChoiceField(choices=LOCAL_CHOICES, widget= forms.Select(attrs={
+        'class':'form-control col-3 mb-2 mb-sm-0 mr-0',
+        }))
+
+    birthdate= forms.CharField(widget = forms.TextInput(attrs={
+        'class':'form-control',
+        }))
+    gender= forms.ChoiceField(choices=GENDER_CHOICES, widget= forms.Select(attrs={
+        'class':'form-control mb-2 mb-sm-0 ml-3 mr-2',
+        }))
+
+    phone_num= forms.CharField(max_length=11, widget= forms.TextInput(attrs={
+        'class':'form-control',
+        'placeholder':'01012345678'
+        }))
+
+    
+    class Meta(UserCreationForm.Meta):
+        fields = UserCreationForm.Meta.fields + ('first_name',)
+
+        widgets ={
+            'username': forms.EmailInput(attrs={
+                'class':'form-control',
+                "placeholder": "이메일을 입력하세요"
+                }),
+            'first_name': forms.TextInput(attrs={
+                'class':'form-control',
+                'placeholder':'이름을 입력해 주세요.'
+                })
+        }
+    def save(self):
+        user = super().save()
+        profile = Profile.objects.create(user=user, 
+            phone_num=self.cleaned_data['phone_num'],
+            address=self.cleaned_data['address'],
+            country= Country.objects.get(id=self.cleaned_data['country']),
+            local= Local.objects.get(id=self.cleaned_data['local']),
+            gender= self.cleaned_data['gender'],
+            birthdate = self.cleaned_data['birthdate'],
+            )
+        return user
+
