@@ -1,0 +1,79 @@
+<form>
+  <div class="modal fade" id="add_memory" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">추억 추가</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group row mb-0">
+            <label for="example-date-input" class="col-3 col-form-label pr-0">여행지역</label>
+            <div class="form-group mr-2">
+              <select class="form-control" id="exampleSelect1">
+                <option disabled selected="selected" class="bg-faded">나라</option>
+                <option>한국</option>
+                <option>일본</option>
+                <option>미국</option>
+                <option>중국</option>
+              </select>
+            </div>
+            <div class="form-group mr-2">
+              <select class="form-control" id="exampleSelect1">
+                <option disabled selected="selected" class="bg-faded">지역</option>
+                <option>서울</option>
+                <option>대구</option>
+                <option>부산</option>
+                <option>원주</option>
+              </select>
+            </div>
+            <div class="form-group row">
+              <div class="col-10">
+                <input class="form-control px-0" placeholder="상세 주소" id="example-text-input">
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="example-date-input" class="col-3 col-form-label pr-0">여행날짜</label>
+            <div class="col-8 pl-0">
+              <input class="form-control" type="date" value="2011-08-19" id="example-date-input">
+            </div>
+          </div>
+          <div class="memory_icon">
+            <a class="fa fa-smile-o fa-2x" href="#"></a>
+            <a class="fa fa-plus fa-2x" href="#"></a>
+            <input type="file" name="">
+          </div>
+          <div class="form-group">
+            <textarea class="form-control" id="exampleTextarea" rows="3"></textarea>
+          </div>
+          <div class="form-group row mb-0">
+            <label for="example-date-input" class="col-3 col-form-label pr-0">공개설정</label>
+            <div class="form-group mr-2">
+              <select class="form-control" id="exampleSelect1">
+                <option disabled selected="selected" class="bg-faded">설정</option>
+                <option>전체공개</option>
+                <option>친구공개</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group row mb-0">
+            <label for="example-date-input" class="col-3 col-form-label pr-0">여행자그룹</label>
+            <div class="form-group mr-2">
+              <select class="form-control" id="exampleSelect1">
+                <option>안함</option>
+                <option>자전거그룹</option>
+                <option>도보그룹</option>
+              </select>
+            </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="upload_bt">Upload</button>
+      </div>
+    </div>
+  </div>
+</div>
+</form>

@@ -1,0 +1,28 @@
+{% extends 'layout.html'%}
+{% load static %}
+<!--스타일 시작 -->
+{% block style %}
+ <link rel="stylesheet" type="text/css" href="{% static 'css/before_login_main.css' %}"> 
+{% endblock style %}
+<!--// 스타일 끝 -->
+
+<!-- 내용 시작 -->
+{% block content %}
+    <main class="main mt-5">
+        <div class="pt-3">
+          <h1 class="logo ml-4">TourPin</h1>
+        </div>
+        <h5 class="total mt-5 pl-2 ml-4">Total number of travelers</h5>
+        <h5 class="mini_total ml-5 pl-2">Korea</h5>
+        <h5 class="total mt-3 pl-2 ml-4">The most area</h5>
+        <h5 class="mini_total ml-5 pl-2">553</h5>
+    </main>
+
+    <span class="icon fixed-bottom">
+      <a class="fa fa-search-plus fa-3x" href="#"></a>
+    </span>
+
+{% endblock content %}
+<!--// 내용 끝 -->
+{% block index_modal %}
+{% endblock index_modal %}

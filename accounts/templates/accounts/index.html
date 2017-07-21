@@ -1,0 +1,51 @@
+{% extends 'layout.html'%}
+{% load static %}
+{% block style %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/after_login_main.css' %}">
+{% endblock %}
+
+<!-- 로그인했을경우 html-->
+{% block content %}
+  <main class="main mt-5">
+      <div class="pt-3">
+        <h1 class="logo ml-4">TourPin</h1>
+      </div>
+      <h5 class="total mt-5 pl-2 ml-4">Total number of travelers</h5>
+      <h5 class="mini_total ml-5 pl-2">Korea</h5>
+      <h5 class="total mt-3 pl-2 ml-4">The most area</h5>
+      <h5 class="mini_total ml-5 pl-2">553</h5>
+      <a class="fa fa-map-marker fa-3x ml-5 pl-5" data-toggle="modal" data-target=".click_mypin" href=".click_mypin"></a>
+  </main>
+  <!-- 밑단 메뉴들 -->
+  <div class="icon">
+    <div class="d-flex justify-content-end fixed-bottom">
+      <div class="mr-auto p-2">
+        <a class="fa fa-compass icons fa-3x ml-3" href="#"></a>
+      </div>
+      <div class="p-2">
+        <!-- 추억 추가 -->
+        <a class="fa fa-plus-circle icons fa-3x" data-toggle="modal" data-target="#add_memory" href="#add_memory"></a>
+        <!-- 추어 삭제 -->
+        <a class="fa fa-minus-circle icons fa-3x" data-toggle="modal" data-target="#del_memory" href="#del_memory"></a>
+        <!-- 추억 검색 -->
+        <a class="fa fa-search-plus icons fa-3x" href="#"></a>
+        <!-- 지도 공유 -->
+        <div class="btn-group dropup pb-3">
+          <a class="fa fa-share-alt icons fa-3x" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span class="sr-only">Toggle Dropdown</span>
+          </a>
+          <div class="dropdown-menu mr-3 pl-1">
+            <ul class="pl-0">
+              <li><a href="#" class="twitter_l fa fa-twitter-square fa-3x"></a></li>
+              <li><a href="#" class="fa fa-facebook-square fa-3x"></a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+ 
+{% endblock %}
+
+{% block login_modal %}
+{% endblock login_modal %}
