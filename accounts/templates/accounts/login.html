@@ -1,5 +1,7 @@
 {% extends 'layout.html'%}
+{% load socialaccount %}
 {% load static %}
+
 <!--스타일 시작 -->
 {% block style %}
  <link rel="stylesheet" type="text/css" href="{% static 'css/before_login_main.css' %}"> 
@@ -23,6 +25,7 @@
     </span>
 
 {% endblock content %}
+
 <!--// 내용 끝 -->
 {% block index_modal %}
 {% endblock index_modal %}

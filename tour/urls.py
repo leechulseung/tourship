@@ -23,6 +23,7 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', login, name='login'),
     url(r'^accounts/', include('accounts.urls')),
+    url(r'^accounts/', include('allauth.urls')),
     url(r'^newspeed/', include('news.urls', namespace="news")),
     url(r'^group/', include('group.urls', namespace='group')),
 ]

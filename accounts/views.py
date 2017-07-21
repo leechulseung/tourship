@@ -1,11 +1,27 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required, user_passes_test
-#index_all 모든 유저가 보는 메인 페이지
-#회원이 보는 메인 페이지
+from django.conf import settings
+#allauth 
+from django.contrib.auth.views import login as auth_login
+from allauth.socialaccount.models import SocialApp
+from allauth.socialaccount.templatetags.socialaccount import get_providers
+from .forms import LoginForm
 
 @user_passes_test(lambda user : not user.is_authenticated, login_url='index')
 def login(request):
-    return render(request, 'accounts/login.html')
+    providers =[]
+    for provider in get_providers():
+        try:
+            provider.social_app = SocialApp.objects.get(provider=provider.id, sites=settings.SITE_ID)
+        except SocialApp.DoesNotExist:
+            provider.social_app= None
+        providers.append(provider)
+        
+    return auth_login(request,
+        authentication_form= LoginForm,
+        template_name='accounts/login.html',
+        extra_context = {'providers': providers}
+        )
 
 @login_required
 def index(request):
@@ -14,7 +30,7 @@ def index(request):
     else:
         pass
     return render(request, 'accounts/index.html')
-    
+
 @user_passes_test(lambda user : not user.is_authenticated, login_url='index')
 def joinus(request):
     return render(request, 'accounts/joinus.html')

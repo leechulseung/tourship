@@ -11,8 +11,13 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+
 #Login setting
 LOGIN_URL = '/'
+
+LOGIN_REDIRECT_URL = '/accounts/index/'
+
+LOGOUT_REDIRECT_URL = '/'
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -38,6 +43,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
+    'django.contrib.sites',
+    'allauth',    
+    'allauth.account',    
+    'allauth.socialaccount',    
+    'allauth.socialaccount.providers.facebook',    
+    'allauth.socialaccount.providers.kakao',    
+    'allauth.socialaccount.providers.naver', 
+
     'accounts',
     'news',
     'group',
@@ -105,6 +119,15 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTHENTICATION_BACKENDS = [    
+    'django.contrib.auth.backends.ModelBackend',# 기본 인증 백엔드
+    'allauth.account.auth_backends.AuthenticationBackend',  # 추가 
+]
+
+# 디폴트 SITE의 id # 등록하지 않으면, 각 요청 시에 host명의 Site 인스턴스를 찾습니다. 
+SITE_ID = 1
+# 이메일 확인을 하지 않음. 
+SOCIALACCOUNT_EMAIL_VERIFICATION = 'none'
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.10/topics/i18n/
