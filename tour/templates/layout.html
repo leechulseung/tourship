@@ -144,154 +144,159 @@
 
     <!-- index 페이지 모달들 -->
   {% block index_modal %}
-      <form>
-  <div class="modal fade" id="add_memory" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">추억 추가</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="form-group row mb-0">
-            <label for="example-date-input" class="col-3 col-form-label pr-0">여행지역</label>
-            <div class="form-group mr-2">
-              <select class="form-control" id="exampleSelect1">
-                <option disabled selected="selected" class="bg-faded">나라</option>
-                <option>한국</option>
-                <option>일본</option>
-                <option>미국</option>
-                <option>중국</option>
-              </select>
-            </div>
-            <div class="form-group mr-2">
-              <select class="form-control" id="exampleSelect1">
-                <option disabled selected="selected" class="bg-faded">지역</option>
-                <option>서울</option>
-                <option>대구</option>
-                <option>부산</option>
-                <option>원주</option>
-              </select>
-            </div>
-            <div class="form-group row">
-              <div class="col-10">
-                <input class="form-control px-0" placeholder="상세 주소" id="example-text-input">
+    <div class="modal fade" id="add_memory" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form method="POST">
+              {% csrf_token %}
+              <p> {{ form.non_field_errors }}</p>
+              <div class="form-group row mb-0">
+                <label for="{{ form.country.id_for_label }} {{ form.local.id_for_label }} {{ form.address.id_for_label }}" class="col-3 col-form-label pr-0">여행지역</label>
+                <div class="form-group mr-2">
+                  {{ form.country }}
+                </div>
+                <div class="form-group mr-2">
+                  <div class="col-10">
+                    {{ form.local }}
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <div class="col-10">
+                    {{ form.address }}
+                  </div>
+                </div>
               </div>
-            </div>
+              {% for error in form.country.errors %}
+                <p>{{ error }}</p>
+              {% endfor %}
+              {% for error in form.local.errors %}
+                <p>{{ error }}</p>
+              {% endfor %}
+              {% for error in form.address.errors %}
+                <p>{{ error }}</p>
+              {% endfor %}
+              <div class="form-group row">
+                <label for="{{ form.tourdate.id_for_label }}" class="col-3 col-form-label pr-0">여행날짜</label>
+                <div class="col-8 pl-0">
+                  {{ form.tourdate }}
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="{{ form.title.id_for_label }}" class="col-3 col-form-label pr-0">제목</label>
+                <div class="col-8 pl-0">
+                  {{ form.title }}
+                </div>
+              </div>
+              {% for error in form.title.errors %}
+                <p>{{ error }}</p>
+              {% endfor %}
+
+              {% for error in form.tourdate.errors %}
+                <p>{{ error }}</p>
+              {% endfor %}
+              <div class="memory_icon">
+                <a class="fa fa-smile-o fa-2x" href="#"></a>
+                <a class="fa fa-plus fa-2x" href="#"></a>
+                {{ form.photo }}
+              </div>
+              {% for error in form.photo.errors %}
+                <p>{{ error }}</p>
+              {% endfor %}
+              <div class="form-group">
+                <label for="{{ form.content.id_for_label }}" class="col-3 col-form-label pr-0">내용</label>
+                {{ form.content }}
+              </div>
+              {% for error in form.content.errors %}
+                <p>{{ error }}</p>
+              {% endfor %}
+              <div class="form-group row mb-0">
+                <label for="{{ form.privacy.id_for_label }}" class="col-3 col-form-label pr-0">공개설정</label>
+                <div class="form-group mr-2">
+                  {{ form.privacy }}
+                </div>
+                {% for error in form.privacy.errors %}
+                  <p>{{ error }}</p>
+                {% endfor %}
+              </div>
+              <!-- 여행자그룹 구현아직..
+              <div class="form-group row mb-0">
+                <label for="example-date-input" class="col-3 col-form-label pr-0">여행자그룹</label>
+                <div class="form-group mr-2">
+                  <select class="form-control" id="exampleSelect1">
+                    <option>안함</option>
+                    <option>자전거그룹</option>
+                    <option>도보그룹</option>
+                  </select>
+                </div>
+              </div>
+              -->
           </div>
-          <div class="form-group row">
-            <label for="example-date-input" class="col-3 col-form-label pr-0">여행날짜</label>
-            <div class="col-8 pl-0">
-              <input class="form-control" type="date" value="2011-08-19" id="example-date-input">
-            </div>
-          </div>
-          <div class="memory_icon">
-            <a class="fa fa-smile-o fa-2x" href="#"></a>
-            <a class="fa fa-plus fa-2x" href="#"></a>
-            <input type="file" name="">
-          </div>
-          <div class="form-group">
-            <textarea class="form-control" id="exampleTextarea" rows="3"></textarea>
-          </div>
-          <div class="form-group row mb-0">
-            <label for="example-date-input" class="col-3 col-form-label pr-0">공개설정</label>
-            <div class="form-group mr-2">
-              <select class="form-control" id="exampleSelect1">
-                <option disabled selected="selected" class="bg-faded">설정</option>
-                <option>전체공개</option>
-                <option>친구공개</option>
-              </select>
-            </div>
-          </div>
-          <div class="form-group row mb-0">
-            <label for="example-date-input" class="col-3 col-form-label pr-0">여행자그룹</label>
-            <div class="form-group mr-2">
-              <select class="form-control" id="exampleSelect1">
-                <option>안함</option>
-                <option>자전거그룹</option>
-                <option>도보그룹</option>
-              </select>
-            </div>
-          </div>
+        <div class="modal-footer">
+          <button type="submit" class="upload_bt">Upload</button>
+          </form>
+        </div>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="upload_bt">Upload</button>
       </div>
-    </div>
-  </div>
-</div>
-</form>
+      </div>
 <!-- 추억추가 modal 끝 -->
-<div class="modal fade" id="del_memory" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">추억 삭제</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="form-group row mb-0">
-            <label for="example-date-input" class="col-3 col-form-label pr-0">여행지역</label>
-            <div class="form-group mr-2">
-              <select class="form-control" id="exampleSelect1">
-                <option disabled selected="selected" class="bg-faded">나라</option>
-                <option>2</option>
-                <option>3</option>
-                <option>4</option>
-                <option>5</option>
-              </select>
+
+<!-- 추억삭제 modal 시작-->
+    <div class="modal fade" id="del_memory" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">추억 삭제</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group row mb-0">
+                <label for="example-date-input" class="col-3 col-form-label pr-0">여행지역</label>
+                <div class="form-group mr-2">
+                  <select class="form-control" id="exampleSelect1" name="country">
+                    <option disabled selected="selected" class="bg-faded">나라</option>
+                    <option value="1">한국</option>
+                    <option value="2">중국</option>
+                    <option value="3">뭐뭐</option>
+                    <option value="4">뭐뭐뭐</option>
+                  </select>
+                </div>
+                <div class="form-group mr-2">
+                  <select class="form-control" id="exampleSelect1" name="local">
+                    <option disabled selected="selected" class="bg-faded">지역</option>
+                    <option value="1">경기</option>
+                    <option value="2">서울</option>
+                    <option value="3">중국</option>
+                    <option value="4">~~</option>
+                  </select>
+                </div>
             </div>
-            <div class="form-group mr-2">
-              <select class="form-control" id="exampleSelect1">
-                <option disabled selected="selected" class="bg-faded">지역</option>
-                <option>2</option>
-                <option>3</option>
-                <option>4</option>
-                <option>5</option>
-              </select>
+            <div class="list">
+              <h5>목록</h5>
+              <ul class="list pl-0" data-toggle="buttons">
+                {% for post in post_list  %}
+                  <li class="list_ck btn btn-primary mb-1">
+                   <input type="checkbox" autocomplete="off"> 추억{{post.id}} 제목:{{post.title}}
+                  </li>
+                {% endfor %}
+              </ul>
             </div>
           </div>
-          <div class="list">
-            <h5>목록</h5>
-            <ul class="list pl-0" data-toggle="buttons">
-              <li class="list_ck btn btn-primary mb-1">
-                 <input type="checkbox" autocomplete="off"> 추억1
-              </li>
-              <li class="list_ck btn btn-primary mb-1">
-                <input type="checkbox" autocomplete="off"> 추억2
-              </li>
-              <li class="list_ck btn btn-primary mb-1">
-                <input type="checkbox" autocomplete="off"> 추억3
-              </li>
-              <li class="list_ck btn btn-primary mb-1">
-                 <input type="checkbox" autocomplete="off"> 추억1
-              </li>
-              <li class="list_ck btn btn-primary mb-1">
-                 <input type="checkbox" autocomplete="off"> 추억1
-              </li>
-              <li class="list_ck btn btn-primary mb-1">
-                 <input type="checkbox" autocomplete="off"> 추억1
-              </li>
-              <li class="list_ck btn btn-primary mb-1">
-                 <input type="checkbox" autocomplete="off"> 추억1
-              </li>
-              <li class="list_ck btn btn-primary mb-1">
-                 <input type="checkbox" autocomplete="off"> 추억1
-              </li>
-            </ul>
+          <div class="modal-footer">
+            <button type="button" class="del_bt fa fa-trash-o fa-2x"></button>
           </div>
+          </div>
+        </div>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="del_bt fa fa-trash-o fa-2x"></button>
-      </div>
-      </div>
-    </div>
-  </div>
-  <!--// 추억 삭제 모달 끝 -->
+      <!--// 추억 삭제 모달 끝 -->
 <!--내핀 클릭시 내용보기 및 수정-->
   <div class="modal fade click_mypin" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">

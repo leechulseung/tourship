@@ -23,5 +23,5 @@ class Profile(models.Model):
     phone_num = models.CharField('전화번호',max_length=15)
 
     def __str__(self):
-        return self.user
+        return self.user.username
 

@@ -5,7 +5,11 @@ from django.conf import settings
 from django.contrib.auth.views import login as auth_login
 from allauth.socialaccount.models import SocialApp
 from allauth.socialaccount.templatetags.socialaccount import get_providers
-from .forms import LoginForm, SignUpForm
+#Form
+from .forms import LoginForm, SignUpForm, PostForm
+#Post
+from news.models import Post
+
 
 @user_passes_test(lambda user : not user.is_authenticated, login_url='index')
 def login(request):
@@ -25,11 +29,17 @@ def login(request):
 
 @login_required
 def index(request):
-    if request.method == 'POST':
-        pass
-    else:
-        pass
-    return render(request, 'accounts/index.html')
+    post_list = Post.objects.all().filter(author=request.user)
+    form = PostForm(request.POST or None)
+    if form.is_valid():
+        post =form.save(commit=False)
+        post.author = request.user
+        post.save()
+        return redirect('news:news_list')
+    return render(request, 'accounts/index.html',{
+        'form':form,
+        'post_list':post_list,
+        })
 
 @user_passes_test(lambda user : not user.is_authenticated, login_url='index')
 def joinus(request):

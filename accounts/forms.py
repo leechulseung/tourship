@@ -1,6 +1,7 @@
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django import forms
 from .models import Country, Local,Profile
+from news.models import Post
 
 COUNTRY_CHOICES = ()
 LOCAL_CHOICES = ()
@@ -9,6 +10,8 @@ GENDER_CHOICES = (
     ('남성','남성'),
     ('여성','여성'),
     )
+
+POST_PRIVACY_CHOICES = ()
 
 for country in Country.objects.all():
     COUNTRY_CHOICES += (country.id , country.name),
@@ -66,6 +69,7 @@ class SignUpForm(UserCreationForm):
                 'placeholder':'이름을 입력해 주세요.'
                 })
         }
+
     def save(self):
         user = super().save()
         profile = Profile.objects.create(user=user, 
@@ -78,3 +82,18 @@ class SignUpForm(UserCreationForm):
             )
         return user
 
+class PostForm(forms.ModelForm):
+
+    class Meta:
+        model = Post
+        fields = ['country','local','address','title','tourdate','photo','content','privacy']
+
+        widgets={
+            'local': forms.Select(attrs={'class':'form-control'}),
+            'country': forms.Select(attrs={'class':'form-control'}),
+            'address': forms.TextInput(attrs={'class':'form-control px-0'}),
+            'title': forms.TextInput(attrs={'class':'form-control'}),
+            'tourdate': forms.TextInput(attrs={'class':'form-control','placeholder':'ex) 20170623'}),
+            'content': forms.Textarea(attrs={'class':'form-control'}),
+            'privacy': forms.Select(attrs={'class':'form-control'}),
+        }
