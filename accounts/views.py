@@ -30,7 +30,7 @@ def login(request):
 @login_required
 def index(request):
     post_list = Post.objects.all().filter(author=request.user)
-    form = PostForm(request.POST or None)
+    form = PostForm(request.POST or None, request.FILES or None)
     if form.is_valid():
         post =form.save(commit=False)
         post.author = request.user

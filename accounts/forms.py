@@ -91,9 +91,9 @@ class PostForm(forms.ModelForm):
         widgets={
             'local': forms.Select(attrs={'class':'form-control'}),
             'country': forms.Select(attrs={'class':'form-control'}),
-            'address': forms.TextInput(attrs={'class':'form-control px-0'}),
-            'title': forms.TextInput(attrs={'class':'form-control'}),
-            'tourdate': forms.TextInput(attrs={'class':'form-control','placeholder':'ex) 20170623'}),
-            'content': forms.Textarea(attrs={'class':'form-control'}),
+            'address': forms.TextInput(attrs={'class':'form-control px-0','placeholder':'상세주소'}),
+            'title': forms.TextInput(attrs={'class':'form-control','placeholder':'제목을 입력하세요.'}),
+            'tourdate': forms.TextInput(attrs={'class':'form-control','placeholder':'20170623'}),
+            'content': forms.Textarea(attrs={'class':'form-control','placeholder':'내용을 입력하세요.'}),
             'privacy': forms.Select(attrs={'class':'form-control'}),
         }

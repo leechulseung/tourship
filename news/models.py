@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from accounts.models import Country, Local
+from django import forms
 
 class Post(models.Model):
     title = models.CharField('제목',max_length=128)
@@ -19,6 +20,28 @@ class Post(models.Model):
     created_at = models.DateTimeField('작성일',auto_now_add=True)
     updated_at =models.DateTimeField('수정일', auto_now=True)
 
+    like_user_set = models.ManyToManyField(settings.AUTH_USER_MODEL,
+                                           blank=True,
+                                           related_name='like_user_set',
+                                           through='Like') # post.like_set 으로 접근 가능
+    
+    def get_absolute_url(self):
+        return reverse('news:news_list', args=[self.id])
+
+    def delete(self, *args, **kwargs):  
+        self.photo.delete()
+        super(Post, self).delete(*args, **kwargs)
+
+    @property
+    def like_count(self):
+        return self.like_user_set.count()
+
+class Postprivacy(models.Model):
+    policy = models.CharField('정책',max_length=15)
+
+    def __str__(self):
+        return self.policy
+
 class Comment(models.Model):
     post = models.ForeignKey('Post', verbose_name='post related',
         related_name='%(app_label)s_%(class)ss'
@@ -29,9 +52,19 @@ class Comment(models.Model):
     created_at = models.DateTimeField('작성일',auto_now_add=True)
     updated_at =models.DateTimeField('수정일', auto_now=True)
 
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['message']
+        widgets={
+        'message': forms.TextInput(attrs={
+        'class':'form-control mb-2 mr-sm-2 mb-sm-0 reply_text',
+        'placeholder':'댓글을 입력해주세요.',    
+            })
+        }
 
-class Postprivacy(models.Model):
-    policy = models.CharField('정책',max_length=15)
-
-    def __str__(self):
-        return self.policy
+class Like(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    post = models.ForeignKey(Post)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
