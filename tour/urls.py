@@ -21,6 +21,7 @@ from django.conf.urls.static import static
 
 from django.contrib.auth import views as auth_views
 
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
 
@@ -28,6 +29,8 @@ urlpatterns = [
     url(r'^accounts/', include('allauth.urls')),
     url(r'^newspeed/', include('news.urls', namespace="news")),
     url(r'^group/', include('group.urls', namespace='group')),
+
+    url(r'^friendship/', include('friendship.urls')),
 ]
 
 urlpatterns += [
@@ -38,3 +41,9 @@ urlpatterns += [
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root= settings.MEDIA_ROOT)
+
+if settings.DEBUG:  
+    import debug_toolbar
+    urlpatterns +=[
+        url(r'^__debug__/', include(debug_toolbar.urls))
+    ]

@@ -1,6 +1,7 @@
 from django.shortcuts import render,redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.conf import settings
+
 #allauth 
 from django.contrib.auth.views import login as auth_login
 from allauth.socialaccount.models import SocialApp
@@ -32,6 +33,8 @@ def index(request):
     post_list = Post.objects.all().filter(author=request.user)
     form = PostForm(request.POST or None, request.FILES or None)
     if form.is_valid():
+        if request.FILES:
+            fiels= request.FILES.getlist('photo', None)
         post =form.save(commit=False)
         post.author = request.user
         post.save()

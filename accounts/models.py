@@ -21,7 +21,6 @@ class Profile(models.Model):
     birthdate = models.CharField('생일',max_length= 120, blank=True)
     gender = models.CharField('성별',max_length=5)
     phone_num = models.CharField('전화번호',max_length=15)
-
     def __str__(self):
         return self.user.username
 

@@ -98,7 +98,6 @@
                 {% for error in form.username.errors %}
                   <p>{{ error }}</p>  
                 {% endfor %}
-                
               </div>
               <div class="form-group mb-0 pb-1">
                 <label class="form-control-label login" for="{{ form.password.id_for_label }}">PW</label>
@@ -132,10 +131,10 @@
               </div>
           </div>
           <div class="modal-footer">
-              <button type="button" class="log_bt btn-secondary" data-dismiss="modal"><a href="{% url 'joinus' %}">Join us</a></button>
-            <button type="submit" class="log_bt btn-primary">Login</button>
+              <button type="button" class="log_bt btn-secondary"><a href="{% url 'joinus' %}">Join us</a></button>
+            <button type="submit" class="log_bt btn-primary login-ajax">Login</button>
           </div>
-            </form>
+          </form>
         </div>
       </div>
     </div>
@@ -154,7 +153,7 @@
             </button>
           </div>
           <div class="modal-body">
-            <form method="POST">
+            <form method="POST" enctype="multipart/form-data">
               {% csrf_token %}
               <p> {{ form.non_field_errors }}</p>
               <div class="form-group row mb-0">
@@ -562,6 +561,7 @@
     <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     {% block script %}
     {% endblock %}
   </body>

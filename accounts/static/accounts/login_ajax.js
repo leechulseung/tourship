@@ -15,36 +15,33 @@ function getCookie(name) {
 }
 
 // unbind().bind() 더블클릭 방지 
-$('.ajaxButton').unbind().bind("click", addAnswer);
+$('.login-ajax').unbind().bind("click", addAnswer);
 
         function addAnswer(e){
         e.submit
         e.stopPropagation(); // 같은 영역에 속해있는 중복 클릭 방지 
-        e.preventDefault();  // 이벤트 진행 중지 
+        //e.preventDefault();  // 이벤트 진행 중지 
         
-        var pk = $(this).parent().attr('name'); //선택된 요소의 부모의 name속성 캐치
-
-        var message = $('.message'+pk+' #id_message').val()
-
+        username = $("#id_username").val();
+        console.log(username);
+        password = $("#id_password").val();
+        console.log(password);
         var csrf = getCookie("csrftoken");
-        if($('.message'+pk+' #id_message').val()==''){
+        if($('#id_password').val()=='' & $("#id_username").val() == ''){
 
         }else{
         $.ajax({
                type : 'post', // post방식으로 전송
                url : "", // 서버로 보낼 url 주소
                data : {  // 서버로 보낼 데이터들 dict형식 
-                'pk':pk,
-                'message': message,
+                'username':username,
+                'password':password,
                 'csrfmiddlewaretoken': csrf,
                 },
                 // 서버에서 리턴받아올 데이터 형식
-               dataType : 'html',  
 
                //서버에서 무사히 html을 리턴하였다면 실행 
                success : function(data, textStatus, jqXHR){ 
-                $('.message'+pk+' #id_message').val("")
-                $('#ajax-comment'+pk).append(data);
                 //append(data);
                },
 

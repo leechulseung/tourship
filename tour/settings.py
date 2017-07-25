@@ -11,8 +11,11 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+from django.conf.global_settings import TEMPLATES
+
 
 #Login setting
+
 LOGIN_URL = '/'
 
 LOGIN_REDIRECT_URL = '/accounts/index/'
@@ -43,7 +46,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
+
+    'friendship',
+
     'django.contrib.sites',
     'allauth',    
     'allauth.account',    
@@ -51,6 +56,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.facebook',    
     'allauth.socialaccount.providers.kakao',    
     'allauth.socialaccount.providers.naver', 
+
+    'debug_toolbar',
 
     'accounts',
     'news',
@@ -65,7 +72,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
+
+INTERNAL_IPS = ('127.0.0.1', )  
 
 ROOT_URLCONF = 'tour.urls'
 
@@ -82,12 +92,15 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                
             ],
         },
     },
 ]
 
 WSGI_APPLICATION = 'tour.wsgi.application'
+
+
 
 
 # Database

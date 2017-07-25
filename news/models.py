@@ -6,7 +6,7 @@ from django import forms
 class Post(models.Model):
     title = models.CharField('제목',max_length=128)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name=' user related',
-        related_name='%(app_label)s_%(class)ss')
+        related_name='%(app_label)s_%(class)ss') 
     photo = models.ImageField('사진', blank=True, upload_to='newspeed/%Y/%m/%d/')
     content = models.TextField('내용',)
     country = models.ForeignKey(Country, verbose_name='국가',
@@ -36,6 +36,9 @@ class Post(models.Model):
     def like_count(self):
         return self.like_user_set.count()
 
+    def __str__(self):
+        return self.author.username
+        
 class Postprivacy(models.Model):
     policy = models.CharField('정책',max_length=15)
 

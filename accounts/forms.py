@@ -58,7 +58,6 @@ class SignUpForm(UserCreationForm):
     
     class Meta(UserCreationForm.Meta):
         fields = UserCreationForm.Meta.fields + ('first_name',)
-
         widgets ={
             'username': forms.EmailInput(attrs={
                 'class':'form-control',
@@ -96,4 +95,5 @@ class PostForm(forms.ModelForm):
             'tourdate': forms.TextInput(attrs={'class':'form-control','placeholder':'20170623'}),
             'content': forms.Textarea(attrs={'class':'form-control','placeholder':'내용을 입력하세요.'}),
             'privacy': forms.Select(attrs={'class':'form-control'}),
+            'photo': forms.ClearableFileInput(attrs={'class':'form-control','multiple':True})
         }
