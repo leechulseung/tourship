@@ -11,7 +11,8 @@ def news_list(request, template='news/news_list.html',
     page_template='news/page_list.html',
     message_template='news/news_list_ajax.html'):
 
-    post_list = Post.objects.order_by('-created_at').filter(Q(author=request.user) | Q(privacy__policy='전체공개'))
+    #17.07.31 중복제거를 위해 distinct()추가
+    post_list = Post.objects.order_by('-created_at').filter(Q(author=request.user) | Q(privacy__policy='전체공개') | Q(author__friends__from_user=request.user) | Q(author__friends__to_user=request.user)).distinct()
     form = CommentForm(request.POST or None)
 
     search = request.GET.get('search', None)
@@ -20,7 +21,7 @@ def news_list(request, template='news/news_list.html',
     if search:
         post_list = post_list.filter(title__icontains=search)
 
-    post_list=post_list.select_related('author').prefetch_related('news_comments__author','like_set')
+    post_list=post_list.select_related('author').prefetch_related('news_comments__author','like_set','author__friends')
     paginator = Paginator(post_list, 3)
     page_num = request.POST.get('page')
 
@@ -38,7 +39,8 @@ def news_list(request, template='news/news_list.html',
     if request.is_ajax():
         if request.POST.get('message',None):
             pk = request.POST.get('pk', None)
-            post = Post.get_object_or_404(Post,pk=pk)
+            print(pk)
+            post = get_object_or_404(Post, pk=pk)
             if form.is_valid():
                 com= form.save(commit=False)
                 com.author = request.user
@@ -48,7 +50,10 @@ def news_list(request, template='news/news_list.html',
                 context={'comment':com}
         else:
             template=page_template
-            context={'posts':posts}
+            context={
+            'posts':posts,
+            'form':form,
+            }
     return render(request, template ,context)
 
 

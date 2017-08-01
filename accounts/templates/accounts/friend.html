@@ -1,0 +1,61 @@
+{% extends "layout.html" %}
+{% load friendshiptags %}
+
+{% block content %}
+<main class="main mt-5">
+
+<div class="container d-flex justify-content-between">
+
+
+
+<div>
+    <h1>친구요청(받음)</h1>
+    {% for rq in requests %}
+        <p>{{rq.to_user}}여행자님의 친구 요청 <a href="{% url 'friend_add' rq.id %}">허락</a><a href="{% url 'friend_reject' rq.id %}">거부</a></p>
+    {% endfor %}
+</div>
+<div>
+    <h1>친구요청(보냄)</h1>
+    {% for rq in sent_requests %}
+        <p>{{rq.to_user}}여행자님에게 요청 보냄 <a href="{% url 'friend_cancel' rq.id %}">취소</a></p>
+    {% endfor %}
+
+</div>
+<div >
+    <h1>친구목록</h1>
+    {% for friend in friend_list %}
+        <p>{{friend}}</p>
+    {% endfor %}
+</div>
+
+<div>
+    <h1>사용자목록</h1>
+    <ul>
+    {% for u in user_list %}
+        {% if u == user  %}
+
+        {% else %}
+        <p>{{u}}
+        {% if u in sent_requests_list %}
+            요청상태..
+        {% elif u in friend_list %}
+            우리는 이미 친구 맞아!
+        {% else %}
+            <a href="{{u.pk}}">요청</a>
+
+        {% endif %}
+        {% endif %}
+        </p>
+    {% endfor %}
+    </ul>
+</div>
+</div>
+
+</main>
+{% endblock content %}
+
+{% block index_modal %}
+{% endblock index_modal%}
+
+{% block login_modal %}
+{% endblock login_modal %}

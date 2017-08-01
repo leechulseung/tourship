@@ -23,7 +23,7 @@ $('.ajaxButton').unbind().bind("click", addAnswer);
         e.preventDefault();  // 이벤트 진행 중지 
         
         var pk = $(this).parent().attr('name'); //선택된 요소의 부모의 name속성 캐치
-
+        console.log(pk)
         var message = $('.message'+pk+' #id_message').val()
 
         var csrf = getCookie("csrftoken");
