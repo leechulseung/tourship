@@ -59,37 +59,43 @@ def joinus(request):
     return render(request, 'accounts/joinus.html' ,{
         'form':form
         })
-flag= True
+
 @login_required
-def set_up(request):
-    global flag
+def setup_auth(request):
     if request.method == "POST":
-        if flag:
-            form = CheckForm(request.user,request.POST)
-            if form.is_valid():
-                username = form.cleaned_data['username']
-                password = form.cleaned_data['password']
-                seo_specialist =  authenticate(username=username, password=password)
-                if seo_specialist is not None:
-                    flag =False
-                else:
-                    flag=True
-        else:
-            form = SetupForm(request.user, request.POST)
-            if form.is_valid():
-                form.save()
-                flag=False
+        form = CheckForm(request.user, request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user_info =  authenticate(username=username, password=password)
+            if user_info is not None:
+                return redirect('setup')
     elif request.method == "GET":
-        form = CheckForm(request.user,request.POST)
+        form = CheckForm(request.user)
     return render(request, 'accounts/set_up.html',{
         'form':form,
         })
 
 @login_required
-def sign_out(request):
+def setup(request):
+    if request.method == "POST":
+        form = SetupForm(user=request.user, data=request.POST)
+        if form.is_valid():
+            form.save()
+    elif request.method == "GET":
+        form = SetupForm(user=request.user, data=request.POST)
+    return render(request, 'accounts/set_up.html',{
+        'form':form,
+        })
+
+@login_required
+def sign_out(request, pk):
+    if pk:
+        user = request.user
+        user.delete()
     return render(request, 'accounts/sign_out.html')
 
-
+@login_required
 def friend_list(request, pk):
     request_s = Friend.objects.requests(request.user)
     sent_requests = Friend.objects.sent_requests(request.user)
@@ -113,16 +119,19 @@ def friend_list(request, pk):
         'sent_requests_list':sent_requests_list,
         })
 
+@login_required
 def friend_accept(request,pk):
     f_request = get_object_or_404(FriendshipRequest, id=pk)
     f_request.accept()
     return redirect('friend_list')
 
+@login_required
 def friend_reject(request,pk):
     f_request = get_object_or_404(FriendshipRequest, id=pk)
     f_request.reject()
     return redirect('friend_list')
 
+@login_required
 def friend_cancel(request,pk):
     f_request = get_object_or_404(FriendshipRequest, id=pk)
     f_request.cancel()

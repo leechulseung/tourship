@@ -24,7 +24,7 @@
     <h1 class="setting__title font-weight-bold mx-2 mx-md-3 mx-lg-4 px-2 px-md-3 px-lg-4">Set-up</h1>
     <ul class="setting__tabs nav nav-tabs mx-2 mx-md-3 mx-lg-4 px-2 px-md-3 px-lg-4">
       <li class="setting__menu">
-        <a class="nav-link" href="{% url 'set_up' %}">회원 정보 수정</a>
+        <a class="nav-link" href="{% url 'setup' %}">회원 정보 수정</a>
       </li>
       <li class="setting__menu">
         <a class="nav-link" href="preference2_decoration.html">꾸미기</a>
@@ -49,7 +49,7 @@
       </p>
       <div class="btn d-flex justify-content-center">
         <button type="button" class="btn__yes py-2 mr-sm-5">
-          <a class="font-weight-bold btn__yes__a" href="#">
+          <a class="font-weight-bold btn__yes__a" href="{% url 'sign_out' user.id %}">
             YES
           </a>
         </button>

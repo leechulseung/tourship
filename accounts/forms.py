@@ -114,22 +114,23 @@ class CheckForm(forms.Form):
         self.user = user
         super().__init__(*args, **kwargs)
 
+    def clean_username(self):
+        username = self.cleaned_data['username']
+        if not username == self.user.username:
+            raise forms.ValidationError("아이디가 틀렸습니다.")
+        return username
+
+    def clean_password(self):
+        password = self.cleaned_data["password"]
+        if not self.user.check_password(password):
+            raise forms.ValidationError("비밀번호가 틀립니다.")
+        return password
 
 class SetupForm(forms.Form):
-    count = 1
-    def __init__(self, user,*args, **kwargs):
+    def __init__(self, user, *args, **kwargs):
         self.user = user
-        self.count = user
-        super(SetupForm,self).__init__(*args, **kwargs)
+        super(SetupForm, self).__init__(*args, **kwargs)
 
-    username = forms.CharField(widget=
-        forms.TextInput(attrs={
-        'class':'form-control',
-        'placeholder':'email@tourpin.com',
-        'value': count,
-        'disabled':'disabled',
-        })   
-    )
     currentPassword = forms.CharField(
             label='현재 비밀번호',
             widget=forms.PasswordInput(attrs={
@@ -167,16 +168,42 @@ class SetupForm(forms.Form):
         """
         Validates that the old_password field is correct.
         """
-        currentPassword = self.cleaned_data["currentPassword"]
-        if not self.user.check_password(currentPassword):
-            raise forms.ValidationError("현재 비밀번호가 틀립니다.")
-        return currentPassword
-        
+        if self.cleaned_data['currentPassword']:
+            currentPassword = self.cleaned_data["currentPassword"]
+            if not self.user.check_password(currentPassword):
+                raise forms.ValidationError("현재 비밀번호가 틀립니다.")
+            return currentPassword
+
+    def clean_newPassword2(self):
+
+        if self.cleaned_data['newPassword2']:
+            if not self.cleaned_data['currentPassword']:
+                raise forms.ValidationError("현재 비밀번호를 입력해 주세요.")
+                
+        password1 = self.cleaned_data.get('newPassword1')
+        password2 = self.cleaned_data.get('newPassword2')
+        if password1 and password2:
+            if password1 != password2:
+                raise forms.ValidationError("두 비밀번호가 다릅니다.")
+        return password2
+
     def save(self, commit=True):
-        print("유저객체입니다!!",self.user)
-        password = self.cleaned_data['newPassword1']
-        print("세이브시 비밀번호입니다!!!", password)
-        self.user.set_password(password)
-        if commit:
-            self.user.save()
+        if self.cleaned_data['currentPassword']:    
+            password = self.cleaned_data["newPassword2"]
+            self.user.set_password(password)
+            if commit:
+                self.user.save()
+
+        if self.cleaned_data['address']:
+            self.user.profile.address = self.cleaned_data['address']
+            self.user.profile.country = Country.objects.get(id=self.cleaned_data['country'])
+            self.user.profile.local = Local.objects.get(id=self.cleaned_data['local'])
+            if commit:
+                self.user.profile.save()
+
+        if self.cleaned_data['phone_num']:    
+            self.user.profile.phone_num = self.cleaned_data['phone_num']
+            if commit:
+                self.user.profile.save()
+        
         return self.user
