@@ -1,6 +1,7 @@
 from django.shortcuts import render,redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.conf import settings
+from django.contrib.auth import authenticate
 from django.contrib.auth import get_user_model
 
 #allauth 
@@ -9,7 +10,7 @@ from allauth.socialaccount.models import SocialApp
 from allauth.socialaccount.templatetags.socialaccount import get_providers
 
 #Form
-from .forms import LoginForm, SignUpForm, PostForm
+from .forms import LoginForm, SignUpForm, PostForm, CheckForm, SetupForm
 
 #Post
 from news.models import Post
@@ -58,10 +59,31 @@ def joinus(request):
     return render(request, 'accounts/joinus.html' ,{
         'form':form
         })
-
+flag= True
 @login_required
 def set_up(request):
-    return render(request, 'accounts/set_up.html')
+    global flag
+    if request.method == "POST":
+        if flag:
+            form = CheckForm(request.user,request.POST)
+            if form.is_valid():
+                username = form.cleaned_data['username']
+                password = form.cleaned_data['password']
+                seo_specialist =  authenticate(username=username, password=password)
+                if seo_specialist is not None:
+                    flag =False
+                else:
+                    flag=True
+        else:
+            form = SetupForm(request.user, request.POST)
+            if form.is_valid():
+                form.save()
+                flag=False
+    elif request.method == "GET":
+        form = CheckForm(request.user,request.POST)
+    return render(request, 'accounts/set_up.html',{
+        'form':form,
+        })
 
 @login_required
 def sign_out(request):

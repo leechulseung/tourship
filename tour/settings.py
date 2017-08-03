@@ -146,7 +146,7 @@ SOCIALACCOUNT_EMAIL_VERIFICATION = 'none'
 # https://docs.djangoproject.com/en/1.10/topics/i18n/
 TIME_ZONE = 'Asia/Seoul'
 
-
+LANGUAGE_CODE = 'ko'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
