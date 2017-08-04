@@ -15,7 +15,7 @@ function getCookie(name) {
 }
 
 // unbind().bind() 더블클릭 방지 
-$('.ajaxButton').unbind().bind("click", addAnswer);
+$(document).on("click",".ajaxButton",addAnswer);
 
         function addAnswer(e){
         e.submit

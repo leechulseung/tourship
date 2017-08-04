@@ -56,6 +56,26 @@ def news_list(request, template='news/news_list.html',
             }
     return render(request, template ,context)
 
+def news_modal(request):
+    pk = request.POST.get('pk', None)
+    post = get_object_or_404(Post, pk=pk)
+    comment = Comment.objects.filter(post=post)
+    form=CommentForm()
+    return render(request, 'news/news_modal.html',{
+        'post':post,
+        'comments':comment,
+        'form':form,
+        })
+
+def news_comment_more(request):
+    pk = request.POST.get('pk', None)
+    post = get_object_or_404(Post, pk=pk)
+    if request.is_ajax():
+        comments = Comment.objects.filter(post=post)[4:]
+        return render(request,'news/comment_more_ajax.html',{
+            'comments':comments,
+            })
+    return redirect("news:news_list")   
 
 @login_required
 def news_update(request):
