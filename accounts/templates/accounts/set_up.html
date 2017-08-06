@@ -42,7 +42,7 @@
     <form class="form-group mx-sm-3 mx-md-5 px-sm-3 px-md-5" method="post">
     {% csrf_token %}
     {{form.as_p}}
-    <input type="submit" name="" value="ok">
+    <input class="send_data" type="submit" name="" value="ok">
     <!--
       <div class="id form-group row mx-lg-5 px-lg-5">
         <label for="inputEmail3" class="col-form-label font-weight-bold col-sm-5 col-md-4"><i class="fa fa-circle mr-3"></i>ID(Email)</label>
@@ -124,9 +124,8 @@
   <!-- // 회원 정보 수정 -->   
 {% endblock content %}
 
-
-
-
+{% block script %}
+{% endblock script %}
 
 
 

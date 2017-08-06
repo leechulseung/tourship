@@ -4,7 +4,7 @@ from django.conf import settings
 from django.contrib.auth import authenticate
 from django.contrib.auth import get_user_model
 
-#allauth 
+#allauth
 from django.contrib.auth.views import login as auth_login
 from allauth.socialaccount.models import SocialApp
 from allauth.socialaccount.templatetags.socialaccount import get_providers
@@ -17,6 +17,8 @@ from news.models import Post
 
 #friend
 from friendship.models import Friend, FriendshipRequest
+
+from .signals import certified_update
 
 @user_passes_test(lambda user : not user.is_authenticated, login_url='index')
 def login(request):
@@ -45,12 +47,13 @@ def index(request):
         post.author = request.user
         post.save()
         return redirect('news:news_list')
+
     return render(request, 'accounts/index.html',{
         'form':form,
         'post_list':post_list,
         })
 
-@user_passes_test(lambda user : not user.is_authenticated, login_url='index')
+@user_passes_test(lambda user : not user.profile.is_authenticated, login_url='index')
 def joinus(request):
     form = SignUpForm(request.POST or None)
     if form.is_valid():
@@ -69,6 +72,9 @@ def setup_auth(request):
             password = form.cleaned_data['password']
             user_info =  authenticate(username=username, password=password)
             if user_info is not None:
+                user=request.user
+                request.user.profile.is_certified = True
+                request.user.profile.save()
                 return redirect('setup')
     elif request.method == "GET":
         form = CheckForm(request.user)
@@ -76,8 +82,13 @@ def setup_auth(request):
         'form':form,
         })
 
+certified = lambda user : user.profile.is_certified
+
 @login_required
+@user_passes_test(certified, login_url='setup_auth')
 def setup(request):
+    request.user.profile.is_certified=False
+    request.user.profile.save()
     if request.method == "POST":
         form = SetupForm(user=request.user, data=request.POST)
         if form.is_valid():
@@ -88,6 +99,7 @@ def setup(request):
         'form':form,
         })
 
+@user_passes_test(certified, login_url='setup_auth')
 @login_required
 def sign_out(request, pk):
     if pk:
