@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Profile, Country, Local
+from .models import Profile, Country, Local, Timechecking
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
@@ -20,3 +20,7 @@ class CountryAdmin(admin.ModelAdmin):
 @admin.register(Local)
 class LocalAdmin(admin.ModelAdmin):
     list_display = ['id', 'name',]
+
+@admin.register(Timechecking)
+class TimeCheckingAdmin(admin.ModelAdmin):
+    pass

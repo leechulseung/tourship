@@ -4,8 +4,11 @@ from . import views
 urlpatterns = [
     url(r'^joinus/$', views.joinus, name="joinus"),
     url(r'^index/$', views.index ,name="index"),
+
     url(r'^setup_auth/$', views.setup_auth, name="setup_auth"),
     url(r'^setup/$', views.setup, name="setup"),
+    url(r'^update_time$', views.update_time, name="update_time"),
+
     url(r'^sign_out/(?P<pk>\d+)?$', views.sign_out, name="sign_out"),
     url(r'^friend/(?P<pk>\d+)?$', views.friend_list, name="friend_list"),
     url(r'^friend_add/(?P<pk>\d+)$', views.friend_accept, name="friend_add"),

@@ -1,4 +1,5 @@
-from django.shortcuts import render,redirect, get_object_or_404
+import json
+from django.shortcuts import render,redirect, get_object_or_404, HttpResponse
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.conf import settings
 from django.contrib.auth import authenticate
@@ -18,8 +19,15 @@ from news.models import Post
 #friend
 from friendship.models import Friend, FriendshipRequest
 
-from .signals import certified_update
+#사용자 인증 체크
+from django.utils import timezone
+from .models import Timechecking
+from django.utils.crypto import get_random_string
 
+# 사용자 인증 여부 리턴 
+certified = lambda user : user.profile.is_certified
+
+#유저 로그인뷰
 @user_passes_test(lambda user : not user.is_authenticated, login_url='index')
 def login(request):
     providers =[]
@@ -36,6 +44,18 @@ def login(request):
         extra_context = {'providers': providers}
         )
 
+#회원가입 뷰
+@user_passes_test(lambda user : not user.profile.is_authenticated, login_url='index')
+def joinus(request):
+    form = SignUpForm(request.POST or None)
+    if form.is_valid():
+        form.save()
+        return redirect('login')
+    return render(request, 'accounts/joinus.html' ,{
+        'form':form
+        })
+
+#메인 뷰 
 @login_required
 def index(request):
     post_list = Post.objects.all().filter(author=request.user)
@@ -53,16 +73,7 @@ def index(request):
         'post_list':post_list,
         })
 
-@user_passes_test(lambda user : not user.profile.is_authenticated, login_url='index')
-def joinus(request):
-    form = SignUpForm(request.POST or None)
-    if form.is_valid():
-        form.save()
-        return redirect('login')
-    return render(request, 'accounts/joinus.html' ,{
-        'form':form
-        })
-
+#사용자 인증 뷰
 @login_required
 def setup_auth(request):
     if request.method == "POST":
@@ -72,8 +83,17 @@ def setup_auth(request):
             password = form.cleaned_data['password']
             user_info =  authenticate(username=username, password=password)
             if user_info is not None:
-                user=request.user
-                request.user.profile.is_certified = True
+                profile= request.user.profile
+                profile.is_certified = True
+                profile.is_certified_time = timezone.now() + timezone.timedelta(seconds=200)
+                check = Timechecking.objects.filter(profile=profile)
+                if check:
+                    check.delete()
+                check = Timechecking.objects.create(
+                    profile=request.user.profile,
+                    time=timezone.now(),
+                    token= get_random_string(length=10),
+                )
                 request.user.profile.save()
                 return redirect('setup')
     elif request.method == "GET":
@@ -82,13 +102,41 @@ def setup_auth(request):
         'form':form,
         })
 
-certified = lambda user : user.profile.is_certified
+@login_required
+@user_passes_test(certified, login_url='setup_auth')
+def update_time(request):
+    if request.method == 'POST':
+        token = request.POST.get('token', None)
+        print("token?", token)
+        if token is not None:
+            timecheck = Timechecking.objects.get(token=token)
+            timecheck.time = timezone.now()
+            timecheck.save()
+            print("timecheck?", timecheck.time, "현재시간", timezone.now())
+            auth_time = timecheck.profile.is_certified_time 
+            real_time = timecheck.time
+            
+            print("인증남은시간", auth_time)
+            print("실제시간", real_time)
+
+            if auth_time > real_time:
+                remaining_time = auth_time - real_time
+                print("남은시간은",remaining_time,"입니다.")
+                return HttpResponse("{}남았습니다.".format(remaining_time))
+            else:
+                request.user.profile.is_certified=False
+                request.user.profile.save()
+                print("인증시간 초과!")
+                timecheck.delete()
+                
+
+
 
 @login_required
 @user_passes_test(certified, login_url='setup_auth')
 def setup(request):
-    request.user.profile.is_certified=False
-    request.user.profile.save()
+    token=request.user.profile.timechecking.token
+    print(token)
     if request.method == "POST":
         form = SetupForm(user=request.user, data=request.POST)
         if form.is_valid():
@@ -97,6 +145,7 @@ def setup(request):
         form = SetupForm(user=request.user, data=request.POST)
     return render(request, 'accounts/set_up.html',{
         'form':form,
+        'token':token,
         })
 
 @user_passes_test(certified, login_url='setup_auth')
